@@ -34,6 +34,8 @@ public class DrawMap extends Thread {
     private volatile boolean running = true;//флаг для остановки потока
     Bitmap[][] map_images;
 
+    int meow = 5;
+
     InputStream in;
     Bitmap emptyField, wall, start, finish, path;
 
