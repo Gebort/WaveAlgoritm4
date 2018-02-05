@@ -24,25 +24,13 @@ public class DrawMap extends Thread {
 
     private SurfaceHolder surfaceHolder;
     int CellSize = 50;
-    int xm, ym;
-    int xw = CellSize; // Размеры квадрата по X
-    int yw = CellSize; // Размеры квадрата по Y
-    int finx, finy;
     int[][] map;
-    float movex = 0;
-    float movey = 0;
-    private volatile boolean running = true;//флаг для остановки потока
-    Bitmap[][] map_images;
-
-    int meow = 5;
-
     InputStream in;
     Bitmap emptyField, wall, start, finish, path;
 
-    {
-
+    public DrawMap(SurfaceHolder surfaceHolder) {
+        this.surfaceHolder = surfaceHolder;
         map = new int[10][10];
-
         for (int i = 0; i < 10; i++) {
             for (int z = 0; z < 10; z++) {  // Заполнение массива нулями
                 map[i][z] = 0;
@@ -51,43 +39,21 @@ public class DrawMap extends Thread {
         map[4][4]=1;
     }
 
-
-
-    public DrawMap(Context context, SurfaceHolder surfaceHolder) {
-        this.surfaceHolder = surfaceHolder;
-    }
-
-
-    public void requestStop() {
-        running = false;
-    }
-
     @Override
     public void run() {
-        while (running) {
-            Canvas canvas = surfaceHolder.lockCanvas();
-            if (canvas != null) {
-                try {
-                    // рисование на canvas
-                    Paint paint = new Paint();
-                    paint.setColor(Color.BLUE);
-                    paint.setStyle(Paint.Style.STROKE);
-
-
-
-                for(int i=0;i<10;i++){
-                        for(int z=0;z<10;z++){
-                        if ( map[i][z]== 0 ){
-                            canvas.drawBitmap(emptyField, i*10,z*10,paint);
-                        }
+        Canvas canvas = surfaceHolder.lockCanvas();
+        try {
+            Paint paint = new Paint();
+            for(int i=0;i<10;i++){
+                for(int z=0;z<10;z++){
+                    if ( map[i][z] == 0 ){
+                        canvas.drawBitmap(emptyField, i*50,z*50, paint);
                     }
                 }
-
-
-                } finally {
-                    surfaceHolder.unlockCanvasAndPost(canvas);
-                }
             }
-        }
+        } finally {
+            surfaceHolder.unlockCanvasAndPost(canvas);
+          }
     }
 }
+

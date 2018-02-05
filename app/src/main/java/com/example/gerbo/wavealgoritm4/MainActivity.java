@@ -8,6 +8,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new DrawView(this));
+
+        //https://habrahabr.ru/post/126316/ - статья про SurfaceView
+        DrawView mainDisplay = new DrawView(this);  //передаем графику в объект mainDisplay
+        setContentView(mainDisplay);                        //класса DrawView (SurfaceView)
+
     }
 }

@@ -10,38 +10,32 @@ import android.view.SurfaceView;
 
 public class DrawView extends SurfaceView implements SurfaceHolder.Callback{
 
-    private DrawMap drawThread;
+    private DrawMap gameMap;   //поток отрисовки
 
     public DrawView(Context context) {
         super(context);
         getHolder().addCallback(this);
     }
 
-    @Override
+    @Override     //создание потока отрисовки
     public void surfaceCreated(SurfaceHolder holder) {
-        // создание SurfaceView
-        drawThread = new DrawMap(getContext(),getHolder());
-        drawThread.start();
-
+        gameMap = new DrawMap(getHolder());
+        gameMap.start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // изменение размеров SurfaceView
+
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        // уничтожение SurfaceView
-        drawThread.requestStop();
         boolean retry = true;
         while (retry) {
             try {
-                drawThread.join();
+                gameMap.join();
                 retry = false;
-            } catch (InterruptedException e) {
-
-            }
+            } catch (InterruptedException e) {}
         }
     }
 
