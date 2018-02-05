@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
         //https://habrahabr.ru/post/126316/ - статья про SurfaceView
         DrawView mainDisplay = new DrawView(this);  //передаем графику в объект mainDisplay
         setContentView(mainDisplay);                        //класса DrawView (SurfaceView)
+        //mainDisplay.surfaceCreated(mainDisplay.getHolder());
 
     }
 }

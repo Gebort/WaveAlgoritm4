@@ -19,7 +19,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override     //создание потока отрисовки
     public void surfaceCreated(SurfaceHolder holder) {
-        gameMap = new DrawMap(getHolder());
+        gameMap = new DrawMap(getHolder(), getResources());
         gameMap.start();
     }
 
