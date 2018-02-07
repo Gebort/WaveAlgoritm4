@@ -3,6 +3,7 @@ package com.example.gerbo.wavealgoritm4;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,11 +25,11 @@ public class DrawMap extends Thread {
 
     private SurfaceHolder surfaceHolder;
     int CellSize = 50;
-    int[][] map;
+    static int[][] map;
     InputStream in;
     Bitmap emptyField, wall, start, finish, path;
 
-    public DrawMap(SurfaceHolder surfaceHolder) {
+    public DrawMap(SurfaceHolder surfaceHolder, Resources resources) {
         this.surfaceHolder = surfaceHolder;
         map = new int[10][10];
         for (int i = 0; i < 10; i++) {
@@ -55,5 +56,12 @@ public class DrawMap extends Thread {
             surfaceHolder.unlockCanvasAndPost(canvas);
           }
     }
+
+static public void setMap(int x,int y,int n){
+        map[x][y]= n;
+}
+
+
+
 }
 

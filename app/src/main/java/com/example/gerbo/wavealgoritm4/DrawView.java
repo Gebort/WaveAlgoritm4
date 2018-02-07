@@ -1,8 +1,11 @@
 package com.example.gerbo.wavealgoritm4;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 /**
  * Created by gerbo on 30.01.2018.
@@ -17,8 +20,9 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback{
         getHolder().addCallback(this);
     }
 
-    @Override     //создание потока отрисовки
-    public void surfaceCreated(SurfaceHolder holder) {
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
         gameMap = new DrawMap(getHolder(), getResources());
         gameMap.start();
     }
@@ -38,6 +42,5 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback{
             } catch (InterruptedException e) {}
         }
     }
-
-    }
+ }
 
