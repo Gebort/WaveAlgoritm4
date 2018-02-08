@@ -24,41 +24,99 @@ import java.io.InputStream;
 public class DrawMap extends Thread {
 
     private SurfaceHolder surfaceHolder;
-    int CellSize = 50;
-    static int[][] map;
-    InputStream in;
-    Bitmap emptyField, wall, start, finish, path;
+    private static int screenSizeX, screenSizeY; //размеры экрана
+    private static int cellSizeX, cellSizeY; //размеры клеток по высоте и ширине
+    private static int cellNumbX = 20;
+    private static int cellNumbY = 30;
+    private static int[][] map;
+    private Bitmap emptyField, wall, start, finish, path;
 
-    public DrawMap(SurfaceHolder surfaceHolder, Resources resources) {
+    /*
+    Дабы не мудрить с массивом map, чтобы с ним один работали и отрисовщик, и будущий алгорит
+    поиска пути, которому нужно будет в массив забивать длину пути, решил сделать обозначение
+    разных типов полей отрицательными значениями:
+     emptyField - 0
+     wall ------ -1
+     start ----- -2
+     finish ---- -3
+     path ------ -4
+     Такие дела
+     */
+
+    public DrawMap(SurfaceHolder surfaceHolder, Resources resources, int screenX, int screenY) {
+
+        /* Если честно, все блоки, которые я выделил ниже, кроме запоминания параметров,
+        в хорошем стиле ООП нужно выносить в отдельные функции. Но раз
+        это просто тест алгоритма, пусть будет так. В противном случае в большой программе
+        можно было бы запутаться*/
+
+        //запоминаем переданные параметры
         this.surfaceHolder = surfaceHolder;
-        map = new int[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int z = 0; z < 10; z++) {  // Заполнение массива нулями
-                map[i][z] = 0;
+        screenSizeX = screenX;
+        screenSizeY = screenY;
+
+        //загружаем картинки
+        emptyField = BitmapFactory.decodeResource(resources, R.drawable.empty_field);
+        wall = BitmapFactory.decodeResource(resources, R.drawable.wall);
+        start = BitmapFactory.decodeResource(resources, R.drawable.start);
+        finish = BitmapFactory.decodeResource(resources, R.drawable.finish);
+        path = BitmapFactory.decodeResource(resources, R.drawable.path);
+
+        //создаем массив нужной размерности и заполняем его 0-ми
+        map = new int[cellNumbY][cellNumbX];
+        for (int y = 0; y < cellNumbY; y++) {
+            for (int x = 0; x < cellNumbX; x++) {
+                map[y][x] = 0;
             }
         }
-        map[4][4]=1;
+
+        //считаем размер клеток
+        cellSizeX = screenSizeX / cellNumbX;
+        cellSizeY = screenSizeY / cellNumbY;
     }
 
     @Override
     public void run() {
+        while (true) {
         Canvas canvas = surfaceHolder.lockCanvas();
-        try {
-            Paint paint = new Paint();
-            for(int i=0;i<10;i++){
-                for(int z=0;z<10;z++){
-                    if ( map[i][z] == 0 ){
-                        canvas.drawBitmap(emptyField, i*50,z*50, paint);
+
+            try {
+                Paint paint = new Paint();
+                canvas.drawColor(Color.WHITE);
+                for (int y = 0; y < cellNumbY; y++) {
+                    for (int x = 0; x < cellNumbX; x++) {
+                        switch (map[y][x]) {
+                            case 0:
+                                canvas.drawBitmap(emptyField, x * cellSizeX, y * cellSizeY, paint);
+                                break;
+                            case -1:
+                                canvas.drawBitmap(wall, x * cellSizeX, y * cellSizeY, paint);
+                                break;
+                            case -2:
+                                canvas.drawBitmap(start, x * cellSizeX, y * cellSizeY, paint);
+                                break;
+                            case -3:
+                                canvas.drawBitmap(finish, x * cellSizeX, y * cellSizeY, paint);
+                                break;
+                            case -4:
+                                canvas.drawBitmap(path, x * cellSizeX, y * cellSizeY, paint);
+                                break;
+                        }
+
                     }
                 }
+            } finally {
+                surfaceHolder.unlockCanvasAndPost(canvas);
             }
-        } finally {
-            surfaceHolder.unlockCanvasAndPost(canvas);
-          }
-    }
+        }}
 
-static public void setMap(int x,int y,int n){
-        map[x][y]= n;
+
+static public void setMap(int x,int y){
+        int cellX = x / cellSizeX;
+        int cellY = y / cellSizeY;
+        map[cellY][cellX]--;
+        if (map[cellY][cellX] == -4) map[cellY][cellX] = 0;
+
 }
 
 
