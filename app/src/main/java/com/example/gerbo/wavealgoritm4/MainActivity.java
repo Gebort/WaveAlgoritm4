@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import static com.example.gerbo.wavealgoritm4.DrawMap.buildWay;
 import static com.example.gerbo.wavealgoritm4.DrawMap.setMap;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener{
 
     DrawView mainDisplay;
+    long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +26,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        int x =  (int) motionEvent.getX(); // где совершен клик
-        int y =  (int) motionEvent.getY();
 
         switch (motionEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN: // проверка нажатия
-                setMap(x, y);
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if ((System.currentTimeMillis() - startTime) > 2000) buildWay();
+                else {
+                int x =  (int) motionEvent.getX();
+                int y =  (int) motionEvent.getY();
+                setMap(x, y);}
                 break;
-        };
+            case MotionEvent.ACTION_DOWN:
+                startTime = System.currentTimeMillis();
+                break;
+        }
         return true;
     }
 }

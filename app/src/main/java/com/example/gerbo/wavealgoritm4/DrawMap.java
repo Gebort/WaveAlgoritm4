@@ -26,8 +26,8 @@ public class DrawMap extends Thread {
     private SurfaceHolder surfaceHolder;
     private static int screenSizeX, screenSizeY; //размеры экрана
     private static int cellSizeX, cellSizeY; //размеры клеток по высоте и ширине
-    private static int cellNumbX = 20;
-    private static int cellNumbY = 30;
+    private static int cellNumbX = 15;
+    private static int cellNumbY = 25;
     private static int[][] map;
     private Bitmap emptyField, wall, start, finish, path;
 
@@ -116,10 +116,18 @@ static public void setMap(int x,int y){
         int cellY = y / cellSizeY;
         map[cellY][cellX]--;
         if (map[cellY][cellX] == -4) map[cellY][cellX] = 0;
-
 }
 
+static public void buildWay() {
+    int[][] wayMap = new int[cellNumbY][cellNumbX];
+    wayMap = PathFinder.findYourWay(map, cellNumbY, cellNumbX);
 
+    for (int y = 0; y < cellNumbY; y++) {
+        for (int x = 0; x < cellNumbX; x++) {
+            if (wayMap[y][x] == -4) map[y][x] = -4;
+        }
+    }
+}
 
 }
 
